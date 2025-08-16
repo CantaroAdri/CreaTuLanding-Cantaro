@@ -1,16 +1,19 @@
 import { useState } from "react";
-
 import TextField from "./TextField.jsx";
 
-const CardComponent = ({ imgSrc, title, text }) => {
+const CardComponent = ({ imgSrc, title, text, Precio, suma, resta, id }) => {
   const [num, setNum] = useState(0);
 
-  const suma = () => {
+  const handleSuma = () => {
     setNum(num + 1);
+    suma();
   };
 
-  const resta = () => {
-    setNum(num - 1);
+  const handleResta = () => {
+    if (num > 0) {
+      setNum(num - 1);
+      resta();
+    }
   };
 
   return (
@@ -19,10 +22,26 @@ const CardComponent = ({ imgSrc, title, text }) => {
       <div className="card-body">
         <h5 className="card-title">{title}</h5>
         <p className="card-text">{text}</p>
-        <button className="btn btn-primary">Comprar</button>
+        <p className="card-text">{Precio}</p>
+        <button
+          className="btn btn-primary"
+          onClick={() =>
+            alert(
+              "producto : " +
+                title +
+                "\n" +
+                "cantidad : " +
+                num +
+                "\n" +
+                "Agregado al Carrito!!"
+            )
+          }
+        >
+          Comprar
+        </button>
         <br />
 
-        <button className="btn btn-danger" onClick={suma}>
+        <button className="btn btn-danger" onClick={handleSuma}>
           +{" "}
         </button>
 
@@ -34,7 +53,7 @@ const CardComponent = ({ imgSrc, title, text }) => {
           readOnly
         />
 
-        <button className="btn btn-danger" onClick={resta}>
+        <button className="btn btn-danger" onClick={handleResta}>
           {" "}
           -{" "}
         </button>

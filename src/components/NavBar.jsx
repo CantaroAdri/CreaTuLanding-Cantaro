@@ -1,4 +1,6 @@
-const NavBar = () => {
+import CardComponent from "./CardComponent.jsx";
+
+const NavBar = ({ carrito }) => {
   return (
     <>
       <div id="menuNav">
@@ -61,7 +63,7 @@ const NavBar = () => {
                     🛒
                   </span>
                   <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    0
+                    {carrito}
                     <span className="visually-hidden">
                       productos en el carrito
                     </span>
