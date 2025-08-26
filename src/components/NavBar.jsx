@@ -1,8 +1,16 @@
-import CardComponent from "./CardComponent.jsx";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import ItemListContainer from "./ItemListContainer.jsx";
+import Quienes from "./linkBotones/Quienes.jsx";
+import InicioSesion from "./linkBotones/InicioSesion.jsx";
+import Contactos from "./linkBotones/Contactos.jsx";
+
 
 const NavBar = ({ carrito }) => {
+  
   return (
     <>
+      {/* NAVBAR */}
       <div id="menuNav">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <div className="container-fluid">
@@ -35,38 +43,39 @@ const NavBar = ({ carrito }) => {
             >
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
-                    Quienes Somos
-                  </a>
+                    
+                 <Link className="nav-link" to="/">Home</Link>
+                  
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Reparaciones
-                  </a>
+                    
+                 <Link className="nav-link" to="/Quienes">Quienes Somos</Link>
+                  
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Contactos
-                  </a>
+                                   
+                  <Link className="nav-link" to="/Contactos">Contactos</Link>
+
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Inicio de sesion
-                  </a>
+                  
+                  <Link className="nav-link" to="/InicioSesion">Inicio de sesion</Link>
+
                 </li>
+                
               </ul>
 
-              {/* Carrito de compras */}
+              {/* CARRITO */}
               <div className="d-flex align-items-center">
-                <a href="#" className="nav-link position-relative">
-                  <span role="img" aria-label="carrito">
-                    🛒
-                  </span>
+                <a
+                  href="#"
+                  className="nav-link position-relative"
+                  data-bs-toggle="modal"
+                  data-bs-target="#carritoModal"
+                >
+                  🛒
                   <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {carrito}
-                    <span className="visually-hidden">
-                      productos en el carrito
-                    </span>
+                    {carrito.reduce((acc, item) => acc + item.cantidad, 0)}
                   </span>
                 </a>
               </div>
@@ -74,6 +83,71 @@ const NavBar = ({ carrito }) => {
           </div>
         </nav>
       </div>
+
+      {/* MODAL CARRITO */}
+      <div
+        className="modal fade"
+        id="carritoModal"
+        tabIndex="-1"
+        aria-labelledby="carritoModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="carritoModalLabel">
+                🛒 Tu Carrito
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Cerrar"
+              ></button>
+            </div>
+            <div className="modal-body">
+              {carrito.length > 0 ? (
+                <ul className="list-group">
+                  {carrito.map((item) => (
+                    <li
+                      key={item.id}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      <span>
+                        <img
+                          src={item.imgSrc}
+                          alt={item.title}
+                          style={{ width: "40px", marginRight: "10px" }}
+                        />
+                        {item.title}
+                      </span>
+                      <span>
+                        Cantidad: {item.cantidad} | Precio: {item.Precio}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No hay productos en el carrito.</p>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+              <button type="button" className="btn btn-success">
+                Finalizar Compra
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+     
     </>
   );
 };

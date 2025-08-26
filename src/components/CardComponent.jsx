@@ -1,18 +1,19 @@
 import { useState } from "react";
 import TextField from "./TextField.jsx";
+import Swal from 'sweetalert2';
 
-const CardComponent = ({ imgSrc, title, text, Precio, suma, resta, id }) => {
+const CardComponent = ({ imgSrc, title, text, Precio, Características, suma, resta, id }) => {
   const [num, setNum] = useState(0);
 
   const handleSuma = () => {
     setNum(num + 1);
-    suma();
+    suma({ id, title, imgSrc, Precio });
   };
 
   const handleResta = () => {
     if (num > 0) {
       setNum(num - 1);
-      resta();
+      resta({ id, title });
     }
   };
 
@@ -23,26 +24,39 @@ const CardComponent = ({ imgSrc, title, text, Precio, suma, resta, id }) => {
         <h5 className="card-title">{title}</h5>
         <p className="card-text">{text}</p>
         <p className="card-text">{Precio}</p>
+        {/* <span className="card-text">{Características}</span> */}
+
         <button
           className="btn btn-primary"
-          onClick={() =>
-            alert(
-              "producto : " +
-                title +
-                "\n" +
-                "cantidad : " +
-                num +
-                "\n" +
-                "Agregado al Carrito!!"
-            )
-          }
+          onClick={() => {
+            Swal.fire({
+              title: title,              
+              imageUrl: imgSrc,
+              imageWidth: 300,
+              imageHeight: 350,
+              imageAlt: "Custom image",
+              html: `
+                <p><strong>Precio:</strong> ${Precio}</p>
+                <p><strong>Características:</strong> ${Características}</p>
+                <p>${text}</p>
+  `,
+});
+            // alert(`Producto : ${title},\nPrecio: ${Precio},\nDescripcion: ${text},\n${Características}  `);
+          }}
         >
-          Comprar
+          Ver Producto
         </button>
-        <br />
 
-        <button className="btn btn-danger" onClick={handleSuma}>
-          +{" "}
+        <button
+          className="btn btn-danger"
+          onClick={handleSuma}
+        >
+          +
+        </button>
+
+        <button className="btn btn-danger" 
+        onClick={handleResta}>
+          -
         </button>
 
         <TextField
@@ -52,11 +66,6 @@ const CardComponent = ({ imgSrc, title, text, Precio, suma, resta, id }) => {
           value={num}
           readOnly
         />
-
-        <button className="btn btn-danger" onClick={handleResta}>
-          {" "}
-          -{" "}
-        </button>
       </div>
     </div>
   );

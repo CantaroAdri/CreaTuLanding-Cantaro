@@ -1,8 +1,8 @@
 import CardComponent from "./CardComponent.jsx";
 
 // src/components/Contenedor.jsx
-const ItemListContainer = ({ AgregarAlCarrito, QuitarDelCarrito }) => {
-  const productos = [
+
+  export const productos = [
     {
       id: 1,
       imgSrc: "/img/fotoModulos/a03.jpg",
@@ -16,6 +16,8 @@ const ItemListContainer = ({ AgregarAlCarrito, QuitarDelCarrito }) => {
       title: "Modelo A04",
       text: "modelo A04.",
       Precio: "Precio: $13.500",
+      Características :  "Compatibilidad perfecta: Diseñado exclusivamente para el Samsung A04, asegurando un ajuste preciso. - Instalación sencilla: Perfecto tanto para profesionales como para entusiastas que desean realizar reparaciones sin complicaciones. - Calidad asegurada: Cada módulo es sometido a rigurosas pruebas para garantizar su óptimo funcionamiento."
+
     },
     {
       id: 3,
@@ -68,6 +70,8 @@ const ItemListContainer = ({ AgregarAlCarrito, QuitarDelCarrito }) => {
       Precio: "Precio: $16.000",
     },
   ];
+
+  const ItemListContainer = ({ AgregarAlCarrito, QuitarDelCarrito }) => {
   return (
     <section id="tarjetas" className="p-6 text-center">
       {productos.map((producto, index) => (
