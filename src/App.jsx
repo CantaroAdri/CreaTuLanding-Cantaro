@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "./components/navBar.jsx";
+import Navbar from "./components/NavBar.jsx";
 import ItemListContainer, { productos } from "./components/ItemListContainer.jsx";
 import Buscador from "./components/buscador.jsx";
 import Quienes from "./components/linkBotones/Quienes.jsx";
