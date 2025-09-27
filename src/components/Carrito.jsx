@@ -1,67 +1,31 @@
-import { useState } from "react";
-import CardComponent from "./CardComponent.jsx";
-import ItemListContainer from "./ItemListContainer.jsx";
+// src/components/Carrito.jsx
+const Carrito = ({ carrito, setCarrito }) => {
+  const quitarDelCarrito = (id) => {
+    setCarrito(carrito.filter((item) => item.id !== id));
+  };
 
-const NavBar = ({ carrito }) => {
-  const [carrito, setCarrito] = useState([]);
+  if (carrito.length === 0) {
+    return <h2 className="text-center mt-4">El carrito está vacío 🛒</h2>;
+  }
+
   return (
-    <>
-      <div id="menuNav">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="container-fluid">
-            <a className="navbar-brand" href="#">
-              ITALY CELL
-            </a>
-            <a className="navbar-brand" href="#">
-              <img
-                src="/img/logoEmpresa.jpg"
-                alt="logo de la empresa"
-                width="40"
-                height="40"
-                className="d-inline-block align-text-top"
-              />
-            </a>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
+    <div className="container mt-4">
+      <h2>Carrito de Compras</h2>
+      <ul className="list-group">
+        {carrito.map((item) => (
+          <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+              <img src={item.imgSrc} alt={item.title} width="50" style={{ marginRight: "10px" }} />
+              {item.title} - {item.Precio}
+            </span>
+            <button className="btn btn-danger btn-sm" onClick={() => quitarDelCarrito(item.id)}>
+              ❌ Quitar
             </button>
-            <div
-              className="collapse navbar-collapse justify-content-between"
-              id="navbarNav"
-            >
-              <ul className="navbar-nav">
-                <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
-                    Quienes Somos
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Reparaciones
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Contactos
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Inicio de sesion
-                  </a>
-                </li>
-              </ul>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-              {/* Carrito de compras */}
-           </div>  
-           
-    </>
-
-export default NavBar;
+export default Carrito;

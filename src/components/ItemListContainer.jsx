@@ -1,88 +1,63 @@
+import { useState, useEffect } from "react";
 import CardComponent from "./CardComponent.jsx";
 
-// src/components/Contenedor.jsx
+// Firebase
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 
-  export const productos = [
-    {
-      id: 1,
-      imgSrc: "/img/fotoModulos/a03.jpg",
-      title: "Modelo A03",
-      text: "compatibles con A03/A02s/A03s/A04e.",
-      Precio: "Precio: $12.000",
-    },
-    {
-      id: 2,
-      imgSrc: "/img/fotoModulos/A04.jpg",
-      title: "Modelo A04",
-      text: "modelo A04.",
-      Precio: "Precio: $13.500",
-      Características :  "Compatibilidad perfecta: Diseñado exclusivamente para el Samsung A04, asegurando un ajuste preciso. - Instalación sencilla: Perfecto tanto para profesionales como para entusiastas que desean realizar reparaciones sin complicaciones. - Calidad asegurada: Cada módulo es sometido a rigurosas pruebas para garantizar su óptimo funcionamiento."
+// Configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAEXRHhrPV1xJ5lL_7r8uME4tmeo4ITEXA",
+  authDomain: "italy-cell.firebaseapp.com",
+  projectId: "italy-cell",
+  storageBucket: "italy-cell.appspot.com",
+  messagingSenderId: "456141198325",
+  appId: "1:456141198325:web:291609d09382deeb1306bc",
+};
 
-    },
-    {
-      id: 3,
-      imgSrc: "/img/fotoModulos/A02.jpg",
-      title: "Modelo A02",
-      text: "compatibles con A02/A12/M12.",
-      Precio: "Precio: $12.000",
-    },
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    {
-      id: 4,
-      imgSrc: "/img/fotoModulos/A01.jpg",
-      title: "Modelo A01",
-      text: "modelo A01 Flex largo.",
-      Precio: "Precio: $12.000",
-    },
-    {
-      id: 5,
-      imgSrc: "/img/fotoModulos/A05.webp",
-      title: "Modelo A05",
-      text: "modelo A05.",
-      Precio: "Precio: $14.000",
-    },
-    {
-      id: 6,
-      imgSrc: "/img/fotoModulos/A10.webp",
-      title: "Modelo A10",
-      text: "modelo A10.",
-      Precio: "Precio: $13.500",
-    },
-    {
-      id: 7,
-      imgSrc: "/img/fotoModulos/A10s.webp",
-      title: "Modelo A10s",
-      text: "modelo A10s.",
-      Precio: "Precio: $12.500",
-    },
-    {
-      id: 8,
-      imgSrc: "/img/fotoModulos/A11.webp",
-      title: "Modelo A11",
-      text: "modelo A11.",
-      Precio: "Precio: $14.000",
-    },
-    {
-      id: 9,
-      imgSrc: "/img/fotoModulos/A13-universal.png",
-      title: "Modelo A13 Universal",
-      text: "Compatible con A13/A23/M23/M33.",
-      Precio: "Precio: $16.000",
-    },
-  ];
+const ItemListContainer = ({ AgregarAlCarrito, QuitarDelCarrito }) => {
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const ItemListContainer = ({ AgregarAlCarrito, QuitarDelCarrito }) => {
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "items"));
+        const productosArray = [];
+        querySnapshot.forEach((doc) => {
+          productosArray.push({ id: doc.id, ...doc.data() });
+        });
+        setProductos(productosArray);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error cargando productos:", error);
+      }
+    };
+
+    fetchProductos();
+  }, []);
+
+  if (loading) {
+    return <p style={{ textAlign: "center", marginTop: "20px" }}>Cargando productos...</p>;
+  }
+
   return (
-    <section id="tarjetas" className="p-6 text-center">
-      {productos.map((producto, index) => (
-        <CardComponent
-          key={index}
-          {...producto}
-          suma={AgregarAlCarrito}
-          resta={QuitarDelCarrito}
-        />
-      ))}
-    </section>
+    <div className="container mt-4">
+      <div className="row g-4">
+        {productos.map((producto) => (
+          <div key={producto.id} className="col-md-4">
+            <CardComponent
+              {...producto}
+              suma={AgregarAlCarrito}
+              resta={QuitarDelCarrito}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
