@@ -1,62 +1,75 @@
-import { useState, useEffect } from "react";
-import CardComponent from "./CardComponent.jsx";
+import { useEffect, useState } from "react";
+import { getDocs, collection } from "firebase/firestore";
+import { db } from "../fireBase";
 
-// Firebase
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
-
-// Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAEXRHhrPV1xJ5lL_7r8uME4tmeo4ITEXA",
-  authDomain: "italy-cell.firebaseapp.com",
-  projectId: "italy-cell",
-  storageBucket: "italy-cell.appspot.com",
-  messagingSenderId: "456141198325",
-  appId: "1:456141198325:web:291609d09382deeb1306bc",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const ItemListContainer = ({ AgregarAlCarrito, QuitarDelCarrito }) => {
+const ItemListContainer = ({ carrito, setCarrito }) => {
   const [productos, setProductos] = useState([]);
-  const [loading, setLoading] = useState(true);
 
+  // Traer productos desde Firestore al cargar el componente
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "items"));
-        const productosArray = [];
-        querySnapshot.forEach((doc) => {
-          productosArray.push({ id: doc.id, ...doc.data() });
-        });
-        setProductos(productosArray);
-        setLoading(false);
+        const snapshot = await getDocs(collection(db, "items"));
+        const productosData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          cantidad: 1 // cada producto inicia con cantidad 1
+        }));
+        setProductos(productosData);
       } catch (error) {
-        console.error("Error cargando productos:", error);
+        console.error("Error al obtener productos:", error);
       }
     };
 
     fetchProductos();
   }, []);
 
-  if (loading) {
-    return <p style={{ textAlign: "center", marginTop: "20px" }}>Cargando productos...</p>;
+  // Función para agregar producto al carrito
+  const agregarAlCarrito = (producto) => {
+    const existe = carrito.find(item => item.id === producto.id);
+
+    if (existe) {
+      // Si ya existe, aumentamos la cantidad
+      setCarrito(
+        carrito.map(item =>
+          item.id === producto.id
+            ? { ...item, cantidad: item.cantidad + 1 }
+            : item
+        )
+      );
+    } else {
+      setCarrito([...carrito, producto]);
+    }
+  };
+
+  // Mostrar mensaje de carga si aún no hay productos
+  if (!productos.length) {
+    return <p className="text-center mt-4">Cargando productos...</p>;
   }
 
   return (
-    <div className="container mt-4">
-      <div className="row g-4">
-        {productos.map((producto) => (
-          <div key={producto.id} className="col-md-4">
-            <CardComponent
-              {...producto}
-              suma={AgregarAlCarrito}
-              resta={QuitarDelCarrito}
-            />
+    <div className="container mt-4 d-flex flex-wrap gap-3">
+      {productos.map((producto) => (
+        <div key={producto.id} className="card" style={{ width: "18rem" }}>
+          <img
+            src={producto.imgSrc}
+            className="card-img-top"
+            alt={producto.title}
+            style={{ height: "180px", objectFit: "cover" }}
+          />
+          <div className="card-body">
+            <img src={producto.img} alt={producto.titulo} />
+            <h5 className="card-title">{producto.titulo}</h5>
+            <p className="card-text">${producto.precio}</p>
+            <button
+              className="btn btn-primary"
+              onClick={() => agregarAlCarrito(producto)}
+            >
+              🛒 Agregar
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };

@@ -7,6 +7,9 @@ import Carrito from "./components/Carrito.jsx";
 import Quienes from "./components/linkBotones/Quienes.jsx";
 import Contactos from "./components/linkBotones/Contactos.jsx";
 import InicioSesion from "./components/linkBotones/InicioSesion.jsx";
+import ItemListContainer from "./components/ItemListContainer"; 
+
+
 
 function App() {
   const [carrito, setCarrito] = React.useState([]);
@@ -37,6 +40,16 @@ function App() {
     <Router>
       <NavBar carrito={carrito} />
       <Routes>
+        <Route
+          path="/"
+          element={
+            <ItemListContainer carrito={carrito} setCarrito={setCarrito} />
+          }
+        />
+        <Route
+          path="/carrito"
+          element={<Carrito carrito={carrito} setCarrito={setCarrito} />}
+        />
         <Route
           path="/"
           element={

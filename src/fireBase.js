@@ -1,3 +1,4 @@
+// src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 
@@ -10,13 +11,17 @@ const firebaseConfig = {
   appId: "1:456141198325:web:291609d09382deeb1306bc"
 };
 
+// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-// Función para traer productos
+// Inicializar Firestore
+export const db = getFirestore(app);  // 👈 AHORA sí exportado
+
+// Función para traer productos desde la colección "items"
 export const getProductos = async () => {
   const productosCol = collection(db, "items");
   const snapshot = await getDocs(productosCol);
+
   return snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()

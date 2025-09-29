@@ -34,7 +34,7 @@ const NavBar = ({ carrito }) => {
 
           {/* Carrito simple */}
           <Link to="/carrito" className="btn btn-outline-primary">
-            🛒 {carrito.length}
+            🛒 {carrito.reduce((acc, item) => acc + item.cantidad, 0)}
           </Link>
         </div>
       </div>
